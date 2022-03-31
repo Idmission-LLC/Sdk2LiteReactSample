@@ -1,0 +1,47 @@
+plugin 'cocoapods-user-defined-build-types'
+
+enable_user_defined_build_types!
+
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, '12.3'
+
+target 'IDMTest' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => false
+  )
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'TensorFlowLiteSwift'
+  #pod 'TensorFlowLiteTaskText', :build_type => :dynamic_framework
+  #pod 'GoogleMLKit/TextRecognition', :build_type => :dynamic_framework
+  pod 'GoogleMLKit/FaceDetection', :build_type => :dynamic_framework
+  #pod 'GoogleMLKit/ImageLabeling', :build_type => :dynamic_framework
+  #pod 'ZXingObjC', :build_type => :dynamic_framework
+  pod 'GZIP', :build_type => :dynamic_framework
+
+  target 'IDMTestTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable the next line.
+  
+  use_flipper!()
+  #use_flipper!({ 'Flipper' => '0.93.0', 'Flipper-Folly' => '2.6.7', 'Flipper-DoubleConversion' => '3.1.7' })
+
+  post_install do |installer|
+    #flipper_post_install(installer)
+    react_native_post_install(installer)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+  end
+end
