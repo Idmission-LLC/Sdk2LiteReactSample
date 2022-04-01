@@ -1,20 +1,20 @@
 package com.idmtest;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.idmission.sdk2.capture.IdMissionCaptureLauncher;
 import com.idmission.sdk2.capture.presentation.camera.helpers.ProcessedCapture;
-import com.idmission.sdk2.client.model.AdditionalCustomerFlagData;
 import com.idmission.sdk2.client.model.CommonApiResponse;
 import com.idmission.sdk2.client.model.ExtractedIdData;
 import com.idmission.sdk2.client.model.ExtractedPersonalData;
@@ -22,9 +22,6 @@ import com.idmission.sdk2.client.model.HostDataResponse;
 import com.idmission.sdk2.client.model.InitializeResponse;
 import com.idmission.sdk2.client.model.Response;
 import com.idmission.sdk2.client.model.ResponseCustomerData;
-import com.idmission.sdk2.client.model.SendInputImagesInPost;
-import com.idmission.sdk2.client.model.SendProcessedImagesInPost;
-import com.idmission.sdk2.client.model.UiCustomizationOptions;
 import com.idmission.sdk2.identityproofing.IdentityProofingSDK;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -76,12 +73,38 @@ public class IDMissionSDK extends ReactContextBaseJavaModule implements Activity
 
     @ReactMethod
     public void  serviceID20() {
-        IdentityProofingSDK.INSTANCE.idValidation(getReactApplicationContext().getCurrentActivity());
+        new AlertDialog.Builder(getReactApplicationContext().getCurrentActivity())
+                .setTitle("Capture Back?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        IdentityProofingSDK.INSTANCE.idValidation(getReactApplicationContext().getCurrentActivity(), true);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        IdentityProofingSDK.INSTANCE.idValidation(getReactApplicationContext().getCurrentActivity(), false);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
 
     @ReactMethod
     public void  serviceID10() {
-        IdentityProofingSDK.INSTANCE.idValidationAndMatchFace(getReactApplicationContext().getCurrentActivity());
+        new AlertDialog.Builder(getReactApplicationContext().getCurrentActivity())
+                .setTitle("Capture Back?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        IdentityProofingSDK.INSTANCE.idValidationAndMatchFace(getReactApplicationContext().getCurrentActivity(), true);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        IdentityProofingSDK.INSTANCE.idValidationAndMatchFace(getReactApplicationContext().getCurrentActivity(), false);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
 
     @ReactMethod
@@ -97,7 +120,20 @@ public class IDMissionSDK extends ReactContextBaseJavaModule implements Activity
     @ReactMethod
     public void  serviceID50(String uniqueCustomerNumber) {
         if(!StringUtils.isEmpty(uniqueCustomerNumber)){
-            IdentityProofingSDK.INSTANCE.idValidationAndcustomerEnroll(getReactApplicationContext().getCurrentActivity(), uniqueCustomerNumber);
+            new AlertDialog.Builder(getReactApplicationContext().getCurrentActivity())
+                    .setTitle("Capture Back?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            IdentityProofingSDK.INSTANCE.idValidationAndcustomerEnroll(getReactApplicationContext().getCurrentActivity(), uniqueCustomerNumber, true);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            IdentityProofingSDK.INSTANCE.idValidationAndcustomerEnroll(getReactApplicationContext().getCurrentActivity(), uniqueCustomerNumber, false);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
         }
     }
 
@@ -175,9 +211,9 @@ public class IDMissionSDK extends ReactContextBaseJavaModule implements Activity
         if (data != null) {
             if (requestCode == IdMissionCaptureLauncher.CAPTURE_REQUEST_CODE) {
                 try{
-                    processedCaptures = launcher.processResult(data);
+                    //processedCaptures = launcher.processResult(data);
                     WritableMap params = Arguments.createMap();
-                    params.putString("data",processedCaptures.toString());
+                    params.putString("data","Success");
                     sendEvent(getReactApplicationContext(), "DataCallback", params);
                 }catch(Exception e){
                     e.printStackTrace();
