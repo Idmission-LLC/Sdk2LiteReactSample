@@ -12,43 +12,6 @@ import SelfieCaptureLite
 
 class IDentitySDKHelper : NSObject{
   
-  @IBAction func initializeSDKlocal(){
-
-    IDentitySDK.templateModelBaseURL = UserDefaults.templateModelBaseURL
-    IDentitySDK.apiBaseURL = UserDefaults.apiBaseURL
-
-    IDCapture.frontRealnessThreshold = UserDefaults.frontRealnessThreshold
-    IDCapture.backRealnessThreshold = UserDefaults.backRealnessThreshold
-    IDCapture.frontDocumentConfidence = UserDefaults.frontDocumentConfidence
-    IDCapture.backDocumentConfidence = UserDefaults.backDocumentConfidence
-    IDCapture.lowerWidthThresholdTolerance = UserDefaults.lowerWidthThresholdTolerance
-    IDCapture.upperWidthThresholdTolerance = UserDefaults.upperWidthThresholdTolerance
-
-    SelfieCapture.minFaceWidth = UserDefaults.minFaceWidth
-    SelfieCapture.eyeOpenProbability = UserDefaults.eyeOpenProbability
-    SelfieCapture.minHeadEulerAngle = UserDefaults.minHeadEulerAngle
-    SelfieCapture.maxHeadEulerAngle = UserDefaults.maxHeadEulerAngle
-    SelfieCapture.minRelativeNoseHeight = UserDefaults.minRelativeNoseHeight
-    SelfieCapture.maxRelativeNoseHeight = UserDefaults.maxRelativeNoseHeight
-    SelfieCapture.labelsConfidenceThreshold = UserDefaults.labelsConfidenceThreshold
-    SelfieCapture.faceMaskProbabilityThreshold = UserDefaults.faceMaskProbabilityThreshold
-    SelfieCapture.liveFaceProbabilityThreshold = UserDefaults.liveFaceProbabilityThreshold
-    SelfieCapture.consecutiveFakeFaceLimit = UserDefaults.consecutiveFakeFaceLimit
-    SelfieCapture.lightIntensityThreshold = UserDefaults.lightIntensityThreshold
-
-    let loginId = UserDefaults.loginId
-    let password = UserDefaults.password
-    let merchantId = UserDefaults.merchantId
-    
-    IDentitySDK.initializeSDK(loginId: loginId, password: password, merchantId: merchantId) { error in
-        if let error = error {
-            print("!!! initialize SDK ERROR: \(error.localizedDescription)")
-        } else {
-            print("!!! initialize SDK SUCCESS")
-        }
-    }
-  }
-  
   @IBAction func initializeSDK(data: NSDictionary, instances: UIViewController) {
     
     let initialize_url:String = data["initialize_url"] as! String
@@ -88,6 +51,11 @@ class IDentitySDKHelper : NSObject{
     SelfieCapture.consecutiveFakeFaceLimit = UserDefaults.consecutiveFakeFaceLimit
     SelfieCapture.lightIntensityThreshold = UserDefaults.lightIntensityThreshold
 
+    // customize the IDCapture retry screen
+    IDCapture.retryScreenText = "Real ID not detected. Please try again."
+    IDCapture.retryScreenImageTintColor = .gray
+    IDCapture.retryScreenButtonTintColor = .gray
+    
     var LoginId:String
     if loginId.isEmpty {
       LoginId = UserDefaults.loginId

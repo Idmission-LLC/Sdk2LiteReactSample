@@ -41,6 +41,10 @@ extension AdditionalCustomerEnrollBiometricRequestData {
     }
 }
 
+enum CaptureType { case captureBack, idTypeCountryState }
+typealias CaptureTypeCompletion = (CaptureType) -> Void
+typealias IDTypeCountryStateCompletion = (_ idType: String, _ idCountry: String, _ idState: String?) -> Void
+
 class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -56,43 +60,97 @@ class ViewController: UIViewController {
     func startIDValidation(instance: UIViewController) {
         // start ID capture, presenting it from this view controller
       let options = AdditionalCustomerWFlagCommonData(serviceOptions: UserDefaults.serviceOptions)
-      showCaptureBackPrompt(instance: instance) { captureBack in
-          // start ID capture, presenting it from this view controller
-        IDentitySDK.idValidation(from: instance, options: options, captureBack: captureBack) { result in
-            switch result {
-            case .success(let validateIdResult):
-              let successViewController = SuccessViewController()
-              successViewController.validateIdResult = validateIdResult
-              successViewController.frontDetectedData = validateIdResult.front
-              successViewController.backDetectedData = validateIdResult.back
-              let navigationController = UINavigationController(rootViewController: successViewController)
-              instance.present(navigationController, animated: true)
-            case .failure(let error):
-              print(error.localizedDescription)
-              self.sendData(text: error.localizedDescription)
-            }
-        }
+      showCaptureTypePrompt(instance: instance) { type in
+          if type == .captureBack {
+              self.showCaptureBackPrompt(instance: instance) { captureBack in
+                  // start ID capture, presenting it from this view controller
+                  IDentitySDK.idValidation(from: instance, options: options, captureBack: captureBack) { result in
+                      switch result {
+                      case .success(let validateIdResult):
+                        let successViewController = SuccessViewController()
+                        successViewController.validateIdResult = validateIdResult
+                        successViewController.frontDetectedData = validateIdResult.front
+                        successViewController.backDetectedData = validateIdResult.back
+                        let navigationController = UINavigationController(rootViewController: successViewController)
+                        instance.present(navigationController, animated: true)
+                      case .failure(let error):
+                        print(error.localizedDescription)
+                        self.sendData(text: error.localizedDescription)
+                      }
+                  }
+              }
+          } else {
+              self.showIDTypeCountryStatePrompt(instance: instance) { idType, idCountry, idState in
+                  // start ID capture, presenting it from this view controller
+                  IDentitySDK.idValidation(from: instance, options: options, idType: idType, idCountry: idCountry, idState: idState) { result in
+                      switch result {
+                      case .success(let validateIdResult):
+                        let successViewController = SuccessViewController()
+                        successViewController.validateIdResult = validateIdResult
+                        successViewController.frontDetectedData = validateIdResult.front
+                        successViewController.backDetectedData = validateIdResult.back
+                        let navigationController = UINavigationController(rootViewController: successViewController)
+                        instance.present(navigationController, animated: true)
+                      case .failure(let error):
+                          if error.localizedDescription == "Invalid ID Type / Country / State" {
+                              let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                              alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                              self.present(alert, animated: true)
+                          }
+                          print(error.localizedDescription)
+                          self.sendData(text: error.localizedDescription)
+                      }
+                  }
+              }
+          }
       }
     }
   
     // 10 - ID Validation and Match Face
     func startIDValidationAndMatchFace(instance: UIViewController) {
         let options = AdditionalCustomerWFlagCommonData(serviceOptions: UserDefaults.serviceOptions)
-        showCaptureBackPrompt(instance: instance) { captureBack in
-          IDentitySDK.idValidationAndMatchFace(from: instance, options: options, captureBack: captureBack) { result in
-              switch result {
-              case .success(let validateIdMatchFaceResult):
-                let successViewController = SuccessViewController()
-                successViewController.validateIdMatchFaceResult = validateIdMatchFaceResult
-                successViewController.frontDetectedData = validateIdMatchFaceResult.front
-                successViewController.backDetectedData = validateIdMatchFaceResult.back
-                let navigationController = UINavigationController(rootViewController: successViewController)
-                instance.present(navigationController, animated: true)
-              case .failure(let error):
-                print(error.localizedDescription)
-                self.sendData(text: error.localizedDescription)
-              }
-          }
+        showCaptureTypePrompt(instance: instance) { type in
+            if type == .captureBack {
+                self.showCaptureBackPrompt(instance: instance) { captureBack in
+                    IDentitySDK.idValidationAndMatchFace(from: instance, options: options, captureBack: captureBack) { result in
+                        switch result {
+                        case .success(let validateIdMatchFaceResult):
+                          let successViewController = SuccessViewController()
+                          successViewController.validateIdMatchFaceResult = validateIdMatchFaceResult
+                          successViewController.frontDetectedData = validateIdMatchFaceResult.front
+                          successViewController.backDetectedData = validateIdMatchFaceResult.back
+                          let navigationController = UINavigationController(rootViewController: successViewController)
+                          instance.present(navigationController, animated: true)
+                        case .failure(let error):
+                          print(error.localizedDescription)
+                          self.sendData(text: error.localizedDescription)
+                        }
+                    }
+                }
+            } else {
+                self.showIDTypeCountryStatePrompt(instance: instance) { idType, idCountry, idState in
+                    // start ID capture, presenting it from this view controller
+                    IDentitySDK.idValidationAndMatchFace(from: instance, options: options, idType: idType, idCountry: idCountry, idState: idState) { result in
+                        switch result {
+                        case .success(let validateIdMatchFaceResult):
+                          let successViewController = SuccessViewController()
+                          successViewController.validateIdMatchFaceResult = validateIdMatchFaceResult
+                          successViewController.frontDetectedData = validateIdMatchFaceResult.front
+                          successViewController.backDetectedData = validateIdMatchFaceResult.back
+                          let navigationController = UINavigationController(rootViewController: successViewController)
+                          instance.present(navigationController, animated: true)
+                        case .failure(let error):
+                            if error.localizedDescription == "Invalid ID Type / Country / State" {
+                                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                                self.present(alert, animated: true)
+                            }
+                            print(error.localizedDescription)
+                            self.sendData(text: error.localizedDescription)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -100,22 +158,50 @@ class ViewController: UIViewController {
       func startIDValidationAndCustomerEnroll(uniqueNumber: String, instance: UIViewController) {
           let personalData = PersonalCustomerCommonRequestData(uniqueNumber: uniqueNumber)
           let options = AdditionalCustomerWFlagCommonData(serviceOptions: UserDefaults.serviceOptions)
-          showCaptureBackPrompt(instance: instance) { captureBack in
-            IDentitySDK.idValidationAndCustomerEnroll(from: instance, personalData: personalData, options: options, captureBack: captureBack) { result in
-                switch result {
-                case .success(let customerEnrollResult):
-                  let successViewController = SuccessViewController()
-                  // set the customer's unique number
-                  successViewController.customerEnrollResult = customerEnrollResult
-                  successViewController.frontDetectedData = customerEnrollResult.front
-                  successViewController.backDetectedData = customerEnrollResult.back
-                  let navigationController = UINavigationController(rootViewController: successViewController)
-                  instance.present(navigationController, animated: true, completion: nil)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self.sendData(text: error.localizedDescription)
-                }
-            }
+          showCaptureTypePrompt(instance: instance) { type in
+              if type == .captureBack {
+                  self.showCaptureBackPrompt(instance: instance) { captureBack in
+                      IDentitySDK.idValidationAndCustomerEnroll(from: instance, personalData: personalData, options: options, captureBack: captureBack) { result in
+                          switch result {
+                          case .success(let customerEnrollResult):
+                            let successViewController = SuccessViewController()
+                            // set the customer's unique number
+                            successViewController.customerEnrollResult = customerEnrollResult
+                            successViewController.frontDetectedData = customerEnrollResult.front
+                            successViewController.backDetectedData = customerEnrollResult.back
+                            let navigationController = UINavigationController(rootViewController: successViewController)
+                            instance.present(navigationController, animated: true, completion: nil)
+                          case .failure(let error):
+                            print(error.localizedDescription)
+                            self.sendData(text: error.localizedDescription)
+                          }
+                      }
+                  }
+              } else {
+                  self.showIDTypeCountryStatePrompt(instance: instance) { idType, idCountry, idState in
+                      // start ID capture, presenting it from this view controller
+                      IDentitySDK.idValidationAndCustomerEnroll(from: instance, personalData: personalData, options: options, idType: idType, idCountry: idCountry, idState: idState) { result in
+                          switch result {
+                          case .success(let customerEnrollResult):
+                            let successViewController = SuccessViewController()
+                            // set the customer's unique number
+                            successViewController.customerEnrollResult = customerEnrollResult
+                            successViewController.frontDetectedData = customerEnrollResult.front
+                            successViewController.backDetectedData = customerEnrollResult.back
+                            let navigationController = UINavigationController(rootViewController: successViewController)
+                            instance.present(navigationController, animated: true, completion: nil)
+                          case .failure(let error):
+                              if error.localizedDescription == "Invalid ID Type / Country / State" {
+                                  let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                                  alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                                  self.present(alert, animated: true)
+                              }
+                              print(error.localizedDescription)
+                              self.sendData(text: error.localizedDescription)
+                          }
+                      }
+                  }
+              }
           }
       }
   
@@ -196,6 +282,43 @@ class ViewController: UIViewController {
         let alert = UIAlertController(title: "Capture Back?", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "No", style: .default) { _ in completion(false) })
         alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in completion(true) })
+        instance.present(alert, animated: true)
+    }
+  
+    private func showCaptureTypePrompt(instance: UIViewController, completion: @escaping CaptureTypeCompletion) {
+        let alert = UIAlertController(title: "Select Capture Type", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Capture Back?", style: .default) { _ in completion(.captureBack) })
+        alert.addAction(UIAlertAction(title: "ID Type / Country / State", style: .default) { _ in completion(.idTypeCountryState) })
+        instance.present(alert, animated: true)
+    }
+
+    private func showIDTypeCountryStatePrompt(instance: UIViewController, completion: @escaping IDTypeCountryStateCompletion) {
+        let alert = UIAlertController(title: "Enter ID Type / Country / State", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addTextField { textField in
+            textField.placeholder = "ID Type"
+            textField.keyboardType = .asciiCapable
+            textField.autocapitalizationType = .allCharacters
+            textField.returnKeyType = .next
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "ID Country"
+            textField.keyboardType = .asciiCapable
+            textField.autocapitalizationType = .allCharacters
+            textField.returnKeyType = .next
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "ID State"
+            textField.keyboardType = .asciiCapable
+            textField.autocapitalizationType = .allCharacters
+            textField.returnKeyType = .done
+        }
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            let idType = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let idCountry = alert.textFields?[1].text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let idState = alert.textFields?[2].text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            completion(idType, idCountry, idState)
+        }))
         instance.present(alert, animated: true)
     }
   
