@@ -82,8 +82,8 @@ class IDentitySDKHelper : NSObject{
           print(error.localizedDescription)
           self.sendData(text: error.localizedDescription)
         } else {
-          print("Initialize SDK SUCCESS")
-          self.sendData(text: "Initialize SDK SUCCESS")
+          print("Success")
+          self.sendData(text: "Success")
         }
     }
   }
