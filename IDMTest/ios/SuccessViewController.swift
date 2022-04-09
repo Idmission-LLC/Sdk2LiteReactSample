@@ -248,18 +248,82 @@ class SuccessViewController: UIViewController {
 
                 switch result {
                 case .success(let response):
-                    var hostDataString = ""
-                    if let hostData = hostData,
-                       let data = try? JSONSerialization.data(withJSONObject: hostData, options: [.prettyPrinted]),
-                       let json = String(data: data, encoding: .utf8) {
-                        hostDataString = "Host Data:\n\n" + json + "\n\n"
-                    }
+                    let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                    let responseCustomerData: NSMutableDictionary = NSMutableDictionary()
+                  
+                    let extractedIdData: NSMutableDictionary = NSMutableDictionary()
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.barcodeDataParsed, forKey: "BarcodeDataParsed")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idCountry, forKey: "IdCountry")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirth, forKey: "IdDateOfBirth")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirthFormatted, forKey: "IdDateOfBirthFormatted")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirthNonEng, forKey: "IdDateOfBirthNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDate, forKey: "IdExpirationDate")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDateFormatted, forKey: "IdExpirationDateFormatted")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDateNonEng, forKey: "IdExpirationDateNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueCountry, forKey: "IdIssueCountry")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueDate, forKey: "IdIssueDate")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueDateNonEng, forKey: "IdIssueDateNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber, forKey: "IdNumber")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumberNonEng, forKey: "IdNumberNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber1, forKey: "IdNumber1")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber2, forKey: "IdNumber2")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber2NonEng, forKey: "IdNumber2NonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber3, forKey: "IdNumber3")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idState, forKey: "IdState")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idType, forKey: "IdType")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.mrzData, forKey: "MrzData")
+                    responseCustomerData.setValue(extractedIdData, forKey: "extractedIdData")
+                  
+                    let extractedPersonalData: NSMutableDictionary = NSMutableDictionary()
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.address, forKey: "Address")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1, forKey: "AddressLine1")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1NonEng, forKey: "AddressLine1NonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2, forKey: "AddressLine2")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2NonEng, forKey: "AddressLine2NonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine3, forKey: "AddressLine3")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressNonEng, forKey: "AddressNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.city, forKey: "City")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.country, forKey: "Country")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.dob, forKey: "Dob")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.email, forKey: "Email")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.firstName, forKey: "FirstName")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.firstNameNonEng, forKey: "FirstNameNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.gender, forKey: "Gender")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastName, forKey: "LastName")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastName2, forKey: "LastName2")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastNameNonEng, forKey: "LastNameNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.middleName, forKey: "MiddleName")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.middleNameNonEng, forKey: "MiddleNameNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.uniqueNumber, forKey: "UniqueNumber")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.name, forKey: "Name")
+                    responseCustomerData.setValue(extractedPersonalData, forKey: "extractedPersonalData")
+                  
+                    responseDictionary.setValue(responseCustomerData, forKey: "responseCustomerData")
+                  
+                    let resultData: NSMutableDictionary = NSMutableDictionary()
+                    resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                    resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                    resultData.setValue(response.resultData?.verificationResultCode, forKey: "VerificationResultCode")
+                    resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                  
+                    responseDictionary.setValue(resultData, forKey: "resultData")
+                  
+                    let status: NSMutableDictionary = NSMutableDictionary()
+                    status.setValue(response.status?.errorData, forKey: "ErrorData")
+                    status.setValue(response.status?.requestId, forKey: "RequestId")
+                    status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                    status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                  
+                    responseDictionary.setValue(status, forKey: "status")
 
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n\(hostDataString)- - -\n\n" + self.texts
-                    }
+                    let jsonData: NSData
+
+                    do {
+                        jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                        let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                        self.texts = jsonString
+                    } catch _ {}
+                
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -274,18 +338,83 @@ class SuccessViewController: UIViewController {
 
                 switch result {
                 case .success(let response):
-                    var hostDataString = ""
-                    if let hostData = hostData,
-                       let data = try? JSONSerialization.data(withJSONObject: hostData, options: [.prettyPrinted]),
-                       let json = String(data: data, encoding: .utf8) {
-                        hostDataString = "Host Data:\n\n" + json + "\n\n"
-                    }
+                    let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                    let responseCustomerData: NSMutableDictionary = NSMutableDictionary()
+                  
+                    let extractedIdData: NSMutableDictionary = NSMutableDictionary()
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.barcodeDataParsed, forKey: "BarcodeDataParsed")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idCountry, forKey: "IdCountry")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirth, forKey: "IdDateOfBirth")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirthFormatted, forKey: "IdDateOfBirthFormatted")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirthNonEng, forKey: "IdDateOfBirthNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDate, forKey: "IdExpirationDate")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDateFormatted, forKey: "IdExpirationDateFormatted")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDateNonEng, forKey: "IdExpirationDateNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueCountry, forKey: "IdIssueCountry")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueDate, forKey: "IdIssueDate")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueDateNonEng, forKey: "IdIssueDateNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber, forKey: "IdNumber")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumberNonEng, forKey: "IdNumberNonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber1, forKey: "IdNumber1")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber2, forKey: "IdNumber2")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber2NonEng, forKey: "IdNumber2NonEng")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber3, forKey: "IdNumber3")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idState, forKey: "IdState")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idType, forKey: "IdType")
+                    extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.mrzData, forKey: "MrzData")
+                    responseCustomerData.setValue(extractedIdData, forKey: "extractedIdData")
+                  
+                    let extractedPersonalData: NSMutableDictionary = NSMutableDictionary()
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.address, forKey: "Address")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1, forKey: "AddressLine1")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1NonEng, forKey: "AddressLine1NonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2, forKey: "AddressLine2")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2NonEng, forKey: "AddressLine2NonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine3, forKey: "AddressLine3")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressNonEng, forKey: "AddressNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.city, forKey: "City")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.country, forKey: "Country")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.dob, forKey: "Dob")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.email, forKey: "Email")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.firstName, forKey: "FirstName")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.firstNameNonEng, forKey: "FirstNameNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.gender, forKey: "Gender")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastName, forKey: "LastName")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastName2, forKey: "LastName2")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastNameNonEng, forKey: "LastNameNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.middleName, forKey: "MiddleName")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.middleNameNonEng, forKey: "MiddleNameNonEng")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.uniqueNumber, forKey: "UniqueNumber")
+                    extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.name, forKey: "Name")
+                    responseCustomerData.setValue(extractedPersonalData, forKey: "extractedPersonalData")
+                  
+                    responseDictionary.setValue(responseCustomerData, forKey: "responseCustomerData")
+                 
+                    let resultData: NSMutableDictionary = NSMutableDictionary()
+                    resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                    resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                    resultData.setValue(response.resultData?.verificationResultCode, forKey: "VerificationResultCode")
+                    resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                    resultData.setValue(response.resultData?.faceVerificationResult, forKey: "FaceVerificationResult")
+                  
+                    responseDictionary.setValue(resultData, forKey: "resultData")
+                  
+                    let status: NSMutableDictionary = NSMutableDictionary()
+                    status.setValue(response.status?.errorData, forKey: "ErrorData")
+                    status.setValue(response.status?.requestId, forKey: "RequestId")
+                    status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                    status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                  
+                    responseDictionary.setValue(status, forKey: "status")
 
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n\(hostDataString)- - -\n\n" + self.texts
-                    }
+                    let jsonData: NSData
+
+                    do {
+                        jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                        let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                        self.texts = jsonString
+                    } catch _ {}
+                  
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -300,18 +429,88 @@ class SuccessViewController: UIViewController {
 
                 switch result {
                 case .success(let response):
-                    var hostDataString = ""
-                    if let hostData = hostData,
-                       let data = try? JSONSerialization.data(withJSONObject: hostData, options: [.prettyPrinted]),
-                       let json = String(data: data, encoding: .utf8) {
-                        hostDataString = "Host Data:\n\n" + json + "\n\n"
-                    }
+                  let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                  let responseCustomerData: NSMutableDictionary = NSMutableDictionary()
+                  
+                  let extractedIdData: NSMutableDictionary = NSMutableDictionary()
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.barcodeDataParsed, forKey: "BarcodeDataParsed")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idCountry, forKey: "IdCountry")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirth, forKey: "IdDateOfBirth")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirthFormatted, forKey: "IdDateOfBirthFormatted")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idDateOfBirthNonEng, forKey: "IdDateOfBirthNonEng")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDate, forKey: "IdExpirationDate")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDateFormatted, forKey: "IdExpirationDateFormatted")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idExpirationDateNonEng, forKey: "IdExpirationDateNonEng")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueCountry, forKey: "IdIssueCountry")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueDate, forKey: "IdIssueDate")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idIssueDateNonEng, forKey: "IdIssueDateNonEng")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber, forKey: "IdNumber")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumberNonEng, forKey: "IdNumberNonEng")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber1, forKey: "IdNumber1")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber2, forKey: "IdNumber2")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber2NonEng, forKey: "IdNumber2NonEng")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idNumber3, forKey: "IdNumber3")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idState, forKey: "IdState")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.idType, forKey: "IdType")
+                  extractedIdData.setValue(response.responseCustomerData?.extractedIdData?.mrzData, forKey: "MrzData")
+                  responseCustomerData.setValue(extractedIdData, forKey: "extractedIdData")
+                
+                  let extractedPersonalData: NSMutableDictionary = NSMutableDictionary()
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.address, forKey: "Address")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1, forKey: "AddressLine1")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1NonEng, forKey: "AddressLine1NonEng")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2, forKey: "AddressLine2")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2NonEng, forKey: "AddressLine2NonEng")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine3, forKey: "AddressLine3")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressNonEng, forKey: "AddressNonEng")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.city, forKey: "City")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.country, forKey: "Country")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.dob, forKey: "Dob")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.email, forKey: "Email")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.firstName, forKey: "FirstName")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.firstNameNonEng, forKey: "FirstNameNonEng")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.gender, forKey: "Gender")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastName, forKey: "LastName")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastName2, forKey: "LastName2")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.lastNameNonEng, forKey: "LastNameNonEng")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.middleName, forKey: "MiddleName")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.middleNameNonEng, forKey: "MiddleNameNonEng")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.uniqueNumber, forKey: "UniqueNumber")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.name, forKey: "Name")
+                  responseCustomerData.setValue(extractedPersonalData, forKey: "extractedPersonalData")
+                
+                  responseDictionary.setValue(responseCustomerData, forKey: "responseCustomerData")
+                  
+                  let resultData: NSMutableDictionary = NSMutableDictionary()
+                  resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                  resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                  resultData.setValue(response.resultData?.verificationResultCode, forKey: "VerificationResultCode")
+                  resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                  resultData.setValue(response.resultData?.faceVerificationResult, forKey: "FaceVerificationResult")
+                  
+                  responseDictionary.setValue(resultData, forKey: "resultData")
+                  
+                  let status: NSMutableDictionary = NSMutableDictionary()
+                  status.setValue(response.status?.errorData, forKey: "ErrorData")
+                  status.setValue(response.status?.requestId, forKey: "RequestId")
+                  status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                  status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                
+                  responseDictionary.setValue(status, forKey: "status")
 
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n\(hostDataString)- - -\n\n" + self.texts
-                    }
+                  let deDuplicationData: NSMutableDictionary = NSMutableDictionary()
+                  deDuplicationData.setValue(response.deDuplicationData, forKey: "DeDuplicationData")
+                
+                  responseDictionary.setValue(deDuplicationData, forKey: "deDuplicationData")
+                  
+                  let jsonData: NSData
+
+                  do {
+                      jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                      let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                      self.texts = jsonString
+                  } catch _ {}
+                  
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -326,11 +525,37 @@ class SuccessViewController: UIViewController {
 
                 switch result {
                 case .success(let response):
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n- - -\n\n" + self.texts
-                    }
+                  let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                
+                  let resultData: NSMutableDictionary = NSMutableDictionary()
+                  resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                  resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                  resultData.setValue(response.resultData?.verificationResultCode, forKey: "VerificationResultCode")
+                  resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                
+                  responseDictionary.setValue(resultData, forKey: "resultData")
+                
+                  let status: NSMutableDictionary = NSMutableDictionary()
+                  status.setValue(response.status?.errorData, forKey: "ErrorData")
+                  status.setValue(response.status?.requestId, forKey: "RequestId")
+                  status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                  status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                
+                  responseDictionary.setValue(status, forKey: "status")
+
+                  let deDuplicationData: NSMutableDictionary = NSMutableDictionary()
+                  deDuplicationData.setValue(response.deDuplicationData, forKey: "DeDuplicationData")
+                
+                  responseDictionary.setValue(deDuplicationData, forKey: "deDuplicationData")
+                  
+                  let jsonData: NSData
+
+                  do {
+                      jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                      let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                      self.texts = jsonString
+                  } catch _ {}
+                  
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -348,11 +573,52 @@ class SuccessViewController: UIViewController {
                     // stub out the base64 image text for logging
                     response.responseCustomerVerifyData?.extractedPersonalData?.enrolledFaceImage = "..."
 
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n- - -\n\n" + self.texts
-                    }
+                  let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                  let responseCustomerVerifyData: NSMutableDictionary = NSMutableDictionary()
+                
+                  let extractedPersonalData: NSMutableDictionary = NSMutableDictionary()
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.address, forKey: "Address")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.addressLine1, forKey: "AddressLine1")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.addressLine2, forKey: "AddressLine2")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.addressLine3, forKey: "AddressLine3")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.city, forKey: "City")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.country, forKey: "Country")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.dob, forKey: "Dob")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.email, forKey: "Email")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.gender, forKey: "Gender")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.uniqueNumber, forKey: "UniqueNumber")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.name, forKey: "Name")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.district, forKey: "District")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.enrolledDate, forKey: "EnrolledDate")
+                  extractedPersonalData.setValue(response.responseCustomerVerifyData?.extractedPersonalData?.phone, forKey: "Phone")
+                  responseCustomerVerifyData.setValue(extractedPersonalData, forKey: "extractedPersonalData")
+                
+                  responseDictionary.setValue(responseCustomerVerifyData, forKey: "responseCustomerVerifyData")
+                
+                  let resultData: NSMutableDictionary = NSMutableDictionary()
+                  resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                  resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                  resultData.setValue(response.resultData?.verificationResultCode, forKey: "VerificationResultCode")
+                  resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                
+                  responseDictionary.setValue(resultData, forKey: "resultData")
+                
+                  let status: NSMutableDictionary = NSMutableDictionary()
+                  status.setValue(response.status?.errorData, forKey: "ErrorData")
+                  status.setValue(response.status?.requestId, forKey: "RequestId")
+                  status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                  status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                
+                  responseDictionary.setValue(status, forKey: "status")
+
+                  let jsonData: NSData
+
+                  do {
+                      jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                      let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                      self.texts = jsonString
+                  } catch _ {}
+                  
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -370,11 +636,51 @@ class SuccessViewController: UIViewController {
                     // stub out the base64 image text for logging
                     response.responseCustomerData?.extractedPersonalData?.enrolledFaceImage = "..."
 
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n- - -\n\n" + self.texts
-                    }
+                  let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                  let responseCustomerData: NSMutableDictionary = NSMutableDictionary()
+            
+                  let extractedPersonalData: NSMutableDictionary = NSMutableDictionary()
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.address, forKey: "Address")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine1, forKey: "AddressLine1")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine2, forKey: "AddressLine2")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.addressLine3, forKey: "AddressLine3")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.city, forKey: "City")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.country, forKey: "Country")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.dob, forKey: "Dob")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.email, forKey: "Email")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.gender, forKey: "Gender")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.uniqueNumber, forKey: "UniqueNumber")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.name, forKey: "Name")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.district, forKey: "District")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.enrolledDate, forKey: "EnrolledDate")
+                  extractedPersonalData.setValue(response.responseCustomerData?.extractedPersonalData?.phone, forKey: "Phone")
+                  responseCustomerData.setValue(extractedPersonalData, forKey: "extractedPersonalData")
+                  
+                  responseDictionary.setValue(responseCustomerData, forKey: "responseCustomerData")
+                
+                  let resultData: NSMutableDictionary = NSMutableDictionary()
+                  resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                  resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                  resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                
+                  responseDictionary.setValue(resultData, forKey: "resultData")
+                
+                  let status: NSMutableDictionary = NSMutableDictionary()
+                  status.setValue(response.status?.errorData, forKey: "ErrorData")
+                  status.setValue(response.status?.requestId, forKey: "RequestId")
+                  status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                  status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                
+                  responseDictionary.setValue(status, forKey: "status")
+
+                  let jsonData: NSData
+
+                  do {
+                      jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                      let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                      self.texts = jsonString
+                  } catch _ {}
+                  
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -389,11 +695,37 @@ class SuccessViewController: UIViewController {
 
                 switch result {
                 case .success(let response):
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    if let data = try? encoder.encode(response), let json = String(data: data, encoding: .utf8) {
-                        self.texts = json + "\n\n- - -\n\n" + self.texts
-                    }
+                  let responseDictionary: NSMutableDictionary = NSMutableDictionary()
+                
+                  let resultData: NSMutableDictionary = NSMutableDictionary()
+                  resultData.setValue(response.resultData?.uniqueRequestId, forKey: "UniqueRequestId")
+                  resultData.setValue(response.resultData?.verificationResult, forKey: "VerificationResult")
+                  resultData.setValue(response.resultData?.verificationResultCode, forKey: "VerificationResultCode")
+                  resultData.setValue(response.resultData?.verificationResultId, forKey: "VerificationResultId")
+                  
+                  responseDictionary.setValue(resultData, forKey: "resultData")
+                
+                  let status: NSMutableDictionary = NSMutableDictionary()
+                  status.setValue(response.status?.errorData, forKey: "ErrorData")
+                  status.setValue(response.status?.requestId, forKey: "RequestId")
+                  status.setValue(response.status?.statusCode, forKey: "StatusCode")
+                  status.setValue(response.status?.statusMessage, forKey: "StatusMessage")
+                
+                  responseDictionary.setValue(status, forKey: "status")
+
+                  let additionalData: NSMutableDictionary = NSMutableDictionary()
+                  additionalData.setValue(response.additionalData?.liveFaceDetectionFlag, forKey: "LiveFaceDetectionFlag")
+                
+                  responseDictionary.setValue(additionalData, forKey: "additionalData")
+                  
+                  let jsonData: NSData
+
+                  do {
+                      jsonData = try JSONSerialization.data(withJSONObject: responseDictionary, options: JSONSerialization.WritingOptions()) as NSData
+                      let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue) as! String
+                      self.texts = jsonString
+                  } catch _ {}
+                  
                     self.sendData()
                     self.dismiss()
                 case .failure(let error):
@@ -404,11 +736,13 @@ class SuccessViewController: UIViewController {
             }
         }
     }
-
+  
   private func sendData() {
-    let dict2:NSMutableDictionary? = ["data" : self.texts ?? ["data" : "error"]]
+    let dict2: NSMutableDictionary = NSMutableDictionary()
+    dict2.setValue(self.texts, forKey: "data")
+    
     let iDMissionSDK = IDMissionSDK()
-    iDMissionSDK.getEvent2("DataCallback", dict: dict2 ?? ["data" : "error"])
+    iDMissionSDK.getEvent2("DataCallback", dict: dict2)
   }
   
   private func display(detectedData data: DetectedData, type: String) {
