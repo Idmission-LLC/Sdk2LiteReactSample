@@ -95,7 +95,7 @@ class ViewController: UIViewController {
                           if error.localizedDescription == "Invalid ID Type / Country / State" {
                               let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                               alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                              self.present(alert, animated: true)
+                              instance.present(alert, animated: true)
                           }
                           print(error.localizedDescription)
                           self.sendData(text: error.localizedDescription)
@@ -143,7 +143,7 @@ class ViewController: UIViewController {
                             if error.localizedDescription == "Invalid ID Type / Country / State" {
                                 let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                                self.present(alert, animated: true)
+                                instance.present(alert, animated: true)
                             }
                             print(error.localizedDescription)
                             self.sendData(text: error.localizedDescription)
@@ -194,7 +194,7 @@ class ViewController: UIViewController {
                               if error.localizedDescription == "Invalid ID Type / Country / State" {
                                   let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                                   alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                                  self.present(alert, animated: true)
+                                  instance.present(alert, animated: true)
                               }
                               print(error.localizedDescription)
                               self.sendData(text: error.localizedDescription)
