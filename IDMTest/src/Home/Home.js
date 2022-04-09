@@ -46,8 +46,7 @@ export default class Home extends React.Component {
         eventEmitter.addListener('onSessionConnect', (event) => { });
 
         eventEmitter.addListener('DataCallback', (event) => {
-            console.log("Responsde")
-            var data = JSON.stringify(event);
+            console.log("Response")
             this.props.navigation.navigate("ResultScreen", { eventResponse: event, eventName: "Data" })
         });
 
