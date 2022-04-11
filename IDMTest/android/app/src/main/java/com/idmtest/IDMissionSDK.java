@@ -22,8 +22,12 @@ import com.idmission.sdk2.client.model.HostDataResponse;
 import com.idmission.sdk2.client.model.InitializeResponse;
 import com.idmission.sdk2.client.model.Response;
 import com.idmission.sdk2.client.model.ResponseCustomerData;
+import com.idmission.sdk2.client.model.UiCustomizationOptions;
 import com.idmission.sdk2.identityproofing.IdentityProofingSDK;
+import com.idmission.sdk2.utils.LANGUAGE;
+
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -176,7 +180,19 @@ public class IDMissionSDK extends ReactContextBaseJavaModule implements Activity
                             Password,
                             MerchantID,
                             false,
-                            true);
+                            true,
+                            new UiCustomizationOptions(LANGUAGE.valueOf("EN"),
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    "Document not detected. Please try again.",
+                                    "Face not detected. Please try again.",
+                                    getReactApplicationContext().getColor(R.color.colorPrimary),
+                                    getReactApplicationContext().getColor(R.color.colorPrimary),
+                                    null
+                            ));
             return response;
         }
     }
@@ -202,6 +218,7 @@ public class IDMissionSDK extends ReactContextBaseJavaModule implements Activity
 
             Response<CommonApiResponse> response =
                     IdentityProofingSDK.INSTANCE.finalSubmit(getReactApplicationContext().getCurrentActivity());
+
             return response;
         }
     }
