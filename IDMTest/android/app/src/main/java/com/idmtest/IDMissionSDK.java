@@ -180,19 +180,7 @@ public class IDMissionSDK extends ReactContextBaseJavaModule implements Activity
                             Password,
                             MerchantID,
                             false,
-                            true,
-                            new UiCustomizationOptions(LANGUAGE.valueOf("EN"),
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    "Document not detected. Please try again.",
-                                    "Face not detected. Please try again.",
-                                    getReactApplicationContext().getColor(R.color.colorPrimary),
-                                    getReactApplicationContext().getColor(R.color.colorPrimary),
-                                    null
-                            ));
+                            true);
             return response;
         }
     }
