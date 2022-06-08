@@ -224,7 +224,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.appcompat:appcompat:1.3.1"
-    implementation 'com.idmission.sdk2:idmission-litesdk:9.2.1.3'
+    implementation 'com.idmission.sdk2:idmission-litesdk:9.2.3.4'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
