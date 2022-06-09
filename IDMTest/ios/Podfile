@@ -19,12 +19,10 @@ target 'IDMTest' do
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   pod 'TensorFlowLiteSwift'
-  #pod 'TensorFlowLiteTaskText', :build_type => :dynamic_framework
-  #pod 'GoogleMLKit/TextRecognition', :build_type => :dynamic_framework
   pod 'GoogleMLKit/FaceDetection', :build_type => :dynamic_framework
-  #pod 'GoogleMLKit/ImageLabeling', :build_type => :dynamic_framework
-  #pod 'ZXingObjC', :build_type => :dynamic_framework
+  pod 'ZXingObjC', :build_type => :dynamic_framework
   pod 'GZIP', :build_type => :dynamic_framework
+  pod 'SSZipArchive', :build_type => :dynamic_framework
 
   target 'IDMTestTests' do
     inherit! :complete
